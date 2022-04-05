@@ -264,24 +264,26 @@ def Merge_By_Sheet(excel_path):
     for key, value in dict_sheet.items():
 
         # 如果该sheet小于文件数量就不保存
-        if len(value) < len(excel_path):
+        if len(value) < len(files):
+            # print(len(excel_path))
+            # print(len(value))
             continue
 
-        # 遍历所有的sheet,value是一个list(Dataframe)
-        excel_writer = pd.ExcelWriter(target_path + '/' + key + '.xlsx', engine='xlsxwriter')
+        else:
+            # 遍历所有的sheet,value是一个list(Dataframe)                                                     
+            excel_writer = pd.ExcelWriter(target_path + '/' + key + '.xlsx', engine='xlsxwriter')
 
-        for sheet in value:
-            sheet_name, sheet_content = sheet
+            for sheet in value:
+                sheet_name, sheet_content = sheet
 
-            # time.sleep(1000)
-            df_sheet = pd.DataFrame(sheet_content)
-            df_sheet.to_excel(excel_writer, index=False, sheet_name=sheet_name)
-            # excel_writer.save()
+                # time.sleep(1000)                                                                   
+                df_sheet = pd.DataFrame(sheet_content)
+                df_sheet.to_excel(excel_writer, index=False, sheet_name=sheet_name)
+                # excel_writer.save()                                                                
 
-        excel_writer.save()
+            excel_writer.save()
 
-
-# 打包好的用于获取FSA10年PDF
+        # 打包好的用于获取FSA10年PDF
 def PDF_Extract(table_flag=None, text_flag=None):
     # 获取指定目录中所有要解析的pdf路径和文件名
     pdfs = Get_Files_Path(INPUT_PDF, 'pdf')
