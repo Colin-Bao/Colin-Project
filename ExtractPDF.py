@@ -13,22 +13,25 @@ import importlib
 import os
 import re
 import sys
+import time
 
 import camelot
 import pandas as pd
-from pygtrans import Translate
-
 # ----- pdfminer引用位置 -----#
 from pdfminer.high_level import extract_pages
 from pdfminer.layout import LTTextContainer
+from pygtrans import Translate
 
 # ----- 与Excel交互的包引用位置 -----#
+import xlsxwriter
+
+# import xlrd
 
 importlib.reload(sys)
 
 # ----- 全局变量 定义文件的输入和输出的名称文件夹 -----#
 INPUT_PDF = 'input_pdf'
-OUTPUT_PDF = 'output_pdf_table'
+OUTPUT_PDF = 'output_pdf_table/'
 INPUT_EXCEL = 'input_excel'
 
 
@@ -154,7 +157,7 @@ def Extract_Tables(Pages, Pdf):
                               edge_tol=1000, flage_size=True)
 
     # 遍历该PDF中的所有表格并存在一个Excel中
-    with pd.ExcelWriter("pdf_tables/" + pdf_name + '.xlsx') as writer:
+    with pd.ExcelWriter(OUTPUT_PDF + pdf_name + '.xlsx') as writer:
         for table in tables:
             # df提供了将table转化为DataFrame的方法
             df_table = pd.DataFrame(table.df)
@@ -257,14 +260,19 @@ def Merge_By_Sheet(excel_path):
     # print(sheet_list)
 
     # 按照sheet重新组成excel
+    # 其中key是得到的合并后的单独的sheet名称,如TOTAL TIME WEIGHTED RETURNS
     for key, value in dict_sheet.items():
+
+        # 如果该sheet小于文件数量就不保存
+        if len(value) < len(excel_path):
+            continue
 
         # 遍历所有的sheet,value是一个list(Dataframe)
         excel_writer = pd.ExcelWriter(target_path + '/' + key + '.xlsx', engine='xlsxwriter')
 
         for sheet in value:
             sheet_name, sheet_content = sheet
-            # print(sheet_content)
+
             # time.sleep(1000)
             df_sheet = pd.DataFrame(sheet_content)
             df_sheet.to_excel(excel_writer, index=False, sheet_name=sheet_name)
@@ -274,7 +282,7 @@ def Merge_By_Sheet(excel_path):
 
 
 # 打包好的用于获取FSA10年PDF
-def Packge_FSAPDF10():
+def PDF_Extract(table_flag=None, text_flag=None):
     # 获取指定目录中所有要解析的pdf路径和文件名
     pdfs = Get_Files_Path(INPUT_PDF, 'pdf')
 
@@ -289,22 +297,22 @@ def Packge_FSAPDF10():
         print("正在提取", pdfpath)
 
         # ----------------- 0.Camelot提取表格 ----------------- #
-
-        # 获得PDF文件中表格所在的页码范围
-        tables_pages = Get_Tables_Pages(pdfname)
-        # 提取
-        Extract_Tables(tables_pages, PDF)
+        if table_flag:
+            # 获得PDF文件中表格所在的页码范围
+            tables_pages = Get_Tables_Pages(pdfname)
+            # 提取
+            Extract_Tables(tables_pages, PDF)
 
         # ----------------- 1.Pdfminer提取文本 ----------------- #
-
-        # # 获得PDF文件中文本所在的页码范围
-        # Texts_Pages = Get_Texts_Pages(pdfname)
-        # # 提取
-        # Extract_Texts(Texts_Pages, PDF)
+        if text_flag:
+            # 获得PDF文件中文本所在的页码范围
+            Texts_Pages = Get_Texts_Pages(pdfname)
+            # # 提取
+            Extract_Texts(Texts_Pages, PDF)
 
 
 if __name__ == '__main__':
     # Merge_By_Sheet('tables_2010_2016')
-    # Packge_FSAPDF10()
+    # PDF_Extract(True)
     Merge_By_Sheet(INPUT_EXCEL)
     # python ExtractPDF.py
