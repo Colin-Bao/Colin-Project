@@ -25,7 +25,7 @@ from pygtrans import Translate
 
 importlib.reload(sys)
 
-# 全局变量
+# ----- 全局变量 定义文件的输入和输出的名称文件夹 -----#
 INPUT_PDF = 'input_pdf'
 OUTPUT_PDF = 'output_pdf_table'
 INPUT_EXCEL = 'input_excel'
