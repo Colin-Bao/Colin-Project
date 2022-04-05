@@ -27,6 +27,7 @@ importlib.reload(sys)
 
 # 全局变量
 INPUT_PDF = 'input_pdf'
+OUTPUT_PDF = 'output_pdf_table'
 INPUT_EXCEL = 'input_excel'
 
 
@@ -83,11 +84,12 @@ def Get_Files_Path(dir_path, file_type):
 
 
 # 在根目录创建一个文件夹用于存储提取的表格
-def Create_Dir_of_Tables(dirname='output_table'):
+def Create_Dir_of_Tables(dirname):
     """
     :param dirname:存放表格的目录名
     :return: 成功失败提示
     """
+
     if not os.path.exists(dirname):
         os.makedirs(dirname)
         return dirname
@@ -276,7 +278,7 @@ def Packge_FSAPDF10():
     pdfs = Get_Files_Path(INPUT_PDF, 'pdf')
 
     # 创建一个文件夹用于储存表格
-    Create_Dir_of_Tables()
+    Create_Dir_of_Tables(OUTPUT_PDF)
 
     # 依次解析所有的pdf
     for PDF in pdfs:
