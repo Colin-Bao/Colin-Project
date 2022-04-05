@@ -16,10 +16,11 @@ import sys
 
 import camelot
 import pandas as pd
+from pygtrans import Translate
+
 # ----- pdfminer引用位置 -----#
 from pdfminer.high_level import extract_pages
 from pdfminer.layout import LTTextContainer
-from pygtrans import Translate
 
 # ----- 与Excel交互的包引用位置 -----#
 
