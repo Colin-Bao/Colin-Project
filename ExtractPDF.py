@@ -13,7 +13,6 @@ import importlib
 import os
 import re
 import sys
-import time
 
 import camelot
 import pandas as pd
@@ -23,7 +22,6 @@ from pdfminer.layout import LTTextContainer
 from pygtrans import Translate
 
 # ----- 与Excel交互的包引用位置 -----#
-import xlsxwriter
 
 # import xlrd
 
@@ -284,6 +282,8 @@ def Merge_By_Sheet(excel_path):
             excel_writer.save()
 
         # 打包好的用于获取FSA10年PDF
+
+
 def PDF_Extract(table_flag=None, text_flag=None):
     # 获取指定目录中所有要解析的pdf路径和文件名
     pdfs = Get_Files_Path(INPUT_PDF, 'pdf')
@@ -308,9 +308,9 @@ def PDF_Extract(table_flag=None, text_flag=None):
         # ----------------- 1.Pdfminer提取文本 ----------------- #
         if text_flag:
             # 获得PDF文件中文本所在的页码范围
-            Texts_Pages = Get_Texts_Pages(pdfname)
+            texts_pages = Get_Texts_Pages(pdfname)
             # # 提取
-            Extract_Texts(Texts_Pages, PDF)
+            Extract_Texts(texts_pages, PDF)
 
 
 if __name__ == '__main__':
