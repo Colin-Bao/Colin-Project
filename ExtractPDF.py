@@ -242,7 +242,7 @@ def Merge_By_Sheet(excel_path):
             dict_sheet.update({key: []})
 
             # 防止过多的表格出错
-            if len(dict_sheet) > 20:
+            if len(dict_sheet) > 30:
                 raise ValueError
 
     # 获得内容
